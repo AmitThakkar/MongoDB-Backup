@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Amit Thakkar <vigildbest@gmail.com>
-
 HOST="127.0.0.1"
 PORT="27017"
 USERNAME=""
 PASSWORD=""
 TODAY=`date "+%Y-%m-%d"`
-FILE_NAME="DATE_${TODAY}"
+FILE_NAME="MongoDB-Dump_${TODAY}"
 BACKUP_PATH="."
+MAX_DAY_BACKUP_FILES=15
 
 # Auto detect unix bin paths, enter these manually if script fails to auto detect
 MONGO_DUMP_BIN_PATH="$(which mongodump)"
@@ -33,6 +33,7 @@ if [ -d "${BACKUP_PATH}" ]; then
 			echo "=> Success: `du -sh ${FILE_NAME}.tar.gz`"; echo;
 			if [ -d "${BACKUP_PATH}/${TMP_BACKUP_DIR}" ]; then
 				rm -rf "${BACKUP_PATH}/${TMP_BACKUP_DIR}"
+				find ${BACKUP_PATH}/* -mtime +${MAX_DAY_BACKUP_FILES} -exec rm {} \;
 			fi
 		else
 			 echo "!!!=> Failed to create backup file: ${BACKUP_PATH}/${FILE_NAME}.tar.gz"; echo;

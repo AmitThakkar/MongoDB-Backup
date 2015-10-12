@@ -5,7 +5,8 @@ PORT="27017"
 USERNAME=""
 PASSWORD=""
 TODAY=`date "+%Y-%m-%d"`
-FILE_NAME="MongoDB-Dump_${TODAY}"
+FILE_PRE_FIX="MongoDB-Dump_"
+FILE_NAME="${FILE_PRE_FIX}${TODAY}"
 BACKUP_PATH="."
 MAX_DAY_BACKUP_FILES=15
 
@@ -33,7 +34,7 @@ if [ -d "${BACKUP_PATH}" ]; then
 			echo "=> Success: `du -sh ${FILE_NAME}.tar.gz`"; echo;
 			if [ -d "${BACKUP_PATH}/${TMP_BACKUP_DIR}" ]; then
 				rm -rf "${BACKUP_PATH}/${TMP_BACKUP_DIR}"
-				find ${BACKUP_PATH}/* -mtime +${MAX_DAY_BACKUP_FILES} -exec rm {} \;
+				find ${BACKUP_PATH}/* -type f -name "${FILE_PRE_FIX}*.tar.gz" -mtime +${MAX_DAY_BACKUP_FILES} -exec rm {} \;
 			fi
 		else
 			 echo "!!!=> Failed to create backup file: ${BACKUP_PATH}/${FILE_NAME}.tar.gz"; echo;
